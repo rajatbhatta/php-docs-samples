@@ -40,24 +40,26 @@ function update_dml_returning(string $instanceId, string $databaseId): void
 
     $transaction = $database->transaction();
 
-    // DML returning sql update query
+    // Update MarketingBudget column for records satisfying
+    // a particular condition and returns the modified
+    // MarketingBudget column of the updated records using
+    // ‘THEN RETURN MarketingBudget’.
+    // It is also possible to return all columns of all the
+    // updated records by using ‘THEN RETURN *’.
     $result = $transaction->execute(
-        'UPDATE Singers SET LastName = @lastName '
-        . 'WHERE SingerId = @singerId THEN RETURN *',
+        'UPDATE Albums SET MarketingBudget = MarketingBudget * 2 '
+        . 'WHERE SingerId = @singerId and AlbumId = @albumid THEN RETURN MarketingBudget',
         [
             'parameters' => [
-              'lastName' => 'Missing',
-              'singerId' => 12,
+              'lastName' => 1,
+              'singerId' => 1,
             ]
         ]
     );
     foreach ($result->rows() as $row) {
         printf(
-            'Row with SingerId %s updated to (%s, %s, %s)' . PHP_EOL,
-            $row['SingerId'],
-            $row['SingerId'],
-            $row['FirstName'],
-            $row['LastName']
+            'MarketingBudget: %s' . PHP_EOL,
+            $row['MarketingBudget']
         );
     }
     $transaction->commit();
