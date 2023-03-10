@@ -40,7 +40,7 @@ function insert_dml_returning(string $instanceId, string $databaseId): void
 
     // Insert records into the SINGERS table and returns the
     // generated column FullName of the inserted records using
-    // ‘THEN RETU&N FullName’.
+    // ‘THEN RETURN FullName’.
     // It is also possible to return all columns of all the
     // inserted records by using ‘THEN RETURN *’.
     $sql = 'INSERT INTO Singers (SingerId, FirstName, LastName) '
