@@ -38,22 +38,24 @@ function insert_dml_returning(string $instanceId, string $databaseId): void
     $instance = $spanner->instance($instanceId);
     $database = $instance->database($databaseId);
 
-    // DML returning sql insert query
+    // Insert records into the SINGERS table and returns the
+    // generated column FullName of the inserted records using
+    // ‘THEN RETU&N FullName’.
+    // It is also possible to return all columns of all the
+    // inserted records by using ‘THEN RETURN *’.
     $sql = 'INSERT INTO Singers (SingerId, FirstName, LastName) '
       . "VALUES (12, 'Melissa', 'Garcia'), "
       . "(13, 'Russell', 'Morales'), "
       . "(14, 'Jacqueline', 'Long'), "
       . "(15, 'Dylan', 'Shaw') "
-      . 'THEN RETURN *';
+      . 'THEN RETURN FullName';
 
     $transaction = $database->transaction();
     $result = $transaction->execute($sql);
     foreach ($result->rows() as $row) {
         printf(
-            'Row (%s, %s, %s) inserted' . PHP_EOL,
-            $row['SingerId'],
-            $row['FirstName'],
-            $row['LastName']
+            'FullName: %s' . PHP_EOL,
+            $row['FullName']
         );
     }
     $transaction->commit();
